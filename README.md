@@ -63,6 +63,15 @@ This helps to organize related data efficiently.
 
 ---
 
+## Bonus Features Implemented
+
+The program also includes file handling functionality.
+
+Student records are saved automatically into a text file (`students.txt`) using the `saveToFile()` function and loaded automatically when the program starts using the `loadFromFile()` function.
+
+This allows student data to remain available even after closing the program.
+
+
 ## Challenges Faced
 
 While working on this project, I faced a few challenges. At first, I had problems committing my project to GitHub because I received some errors and was not sure how to fix them. It took me some time to understand how Git and GitHub work together.
