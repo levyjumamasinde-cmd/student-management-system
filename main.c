@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX 100
 
@@ -24,9 +25,14 @@ void updateStudent();
 void bestStudent();
 char calculateGrade(float average);
 void calculateAverageAndGrade(struct Student *s);
+void saveToFile();
+void loadFromFile();
 
 int main() {
     int choice;
+
+    // Load saved students from file
+    loadFromFile();
 
     do {
         printf("\n===== STUDENT MANAGEMENT SYSTEM =====\n");
@@ -43,21 +49,27 @@ int main() {
             case 1:
                 addStudent();
                 break;
+
             case 2:
                 displayStudents();
                 break;
+
             case 3:
                 searchStudent();
                 break;
+
             case 4:
                 updateStudent();
                 break;
+
             case 5:
                 bestStudent();
                 break;
+
             case 6:
                 printf("Exiting program...\n");
                 break;
+
             default:
                 printf("Invalid choice!\n");
         }
@@ -113,6 +125,9 @@ void addStudent() {
     printf("Student added successfully!\n");
 
     count++;
+
+    // Save data to file
+    saveToFile();
 }
 
 // Display all students
@@ -142,12 +157,14 @@ void searchStudent() {
 
     for(int i = 0; i < count; i++) {
         if(students[i].admissionNumber == adm) {
+
             printf("\nStudent Found!\n");
             printf("Name: %s\n", students[i].name);
             printf("Admission Number: %d\n", students[i].admissionNumber);
             printf("Age: %d\n", students[i].age);
             printf("Average: %.2f\n", students[i].average);
             printf("Grade: %c\n", students[i].grade);
+
             found = 1;
             break;
         }
@@ -167,6 +184,7 @@ void updateStudent() {
     scanf("%d", &adm);
 
     for(int i = 0; i < count; i++) {
+
         if(students[i].admissionNumber == adm) {
 
             printf("Enter new marks:\n");
@@ -179,6 +197,10 @@ void updateStudent() {
             calculateAverageAndGrade(&students[i]);
 
             printf("Student updated successfully!\n");
+
+            // Save updated data
+            saveToFile();
+
             found = 1;
             break;
         }
@@ -191,6 +213,7 @@ void updateStudent() {
 
 // Best performing student
 void bestStudent() {
+
     if(count == 0) {
         printf("No students available.\n");
         return;
@@ -199,6 +222,7 @@ void bestStudent() {
     int best = 0;
 
     for(int i = 1; i < count; i++) {
+
         if(students[i].average > students[best].average) {
             best = i;
         }
@@ -209,4 +233,51 @@ void bestStudent() {
     printf("Admission Number: %d\n", students[best].admissionNumber);
     printf("Average: %.2f\n", students[best].average);
     printf("Grade: %c\n", students[best].grade);
+}
+
+// Save students to file
+void saveToFile() {
+
+    FILE *file = fopen("students.txt", "w");
+
+    if(file == NULL) {
+        printf("Error saving file!\n");
+        return;
+    }
+
+    for(int i = 0; i < count; i++) {
+
+        fprintf(file, "%s %d %d %.2f %c\n",
+            students[i].name,
+            students[i].admissionNumber,
+            students[i].age,
+            students[i].average,
+            students[i].grade);
+    }
+
+    fclose(file);
+}
+
+// Load students from file
+void loadFromFile() {
+
+    FILE *file = fopen("students.txt", "r");
+
+    if(file == NULL) {
+        return;
+    }
+
+    count = 0;
+
+    while(fscanf(file, "%s %d %d %f %c",
+        students[count].name,
+        &students[count].admissionNumber,
+        &students[count].age,
+        &students[count].average,
+        &students[count].grade) != EOF) {
+
+        count++;
+    }
+
+    fclose(file);
 }
