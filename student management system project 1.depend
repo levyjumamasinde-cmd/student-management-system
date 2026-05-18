@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1779128942 source:c:\users\hp\onedrive\documents\c programming\student management system project 1\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
